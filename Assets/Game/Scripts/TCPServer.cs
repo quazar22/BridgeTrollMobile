@@ -22,7 +22,8 @@ public class TCPServer : MonoBehaviour
     //////////////////////////-------- BEGIN FUNCTIONS --------//////////////////////////
     void Start()
     {
-        if(serverStarted) { return; }
+        SetClient(GameObject.Find("Networking"));
+        //if(serverStarted) { return; }
         clients = new List<ServerClient>();
         lobbyList = new List<ServerClient>();
 

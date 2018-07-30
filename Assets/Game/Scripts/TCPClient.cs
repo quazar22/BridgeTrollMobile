@@ -30,6 +30,7 @@ public class TCPClient : MonoBehaviour
     internal static PlayerManager p;
     internal static PlayerUpdate PlayerUpdater;
 
+
     void Start()
     {
         Networking = GameObject.Find("Networking");
@@ -70,24 +71,20 @@ public class TCPClient : MonoBehaviour
         }
         if (currentscene == "Game")
         {
+            MenuCtrl = GameObject.Find("MenuCtrl").GetComponent<Button>();
+            MenuCtrl.onClick.AddListener(ResetEverything);
             PlayerUpdater = GameObject.Find("PlayerUpdate").GetComponent<PlayerUpdate>();
-            //clientplayer.PlayerObject = Instantiate(PlayerObj, new Vector3(clientplayer.pos.x, clientplayer.pos.y, clientplayer.pos.z), Quaternion.identity);
-            //clientplayer.PlayerObject.name = "ClientPlayer";
-            //mainCamera = GameObject.Find("Main Camera").GetComponent<CameraMovement>(); //works
-            //mainCamera.reference = clientplayer.PlayerObject.GetComponentsInChildren<Transform>()[1];
-            //mainCamera.posF = 1.0f;
-            //mainCamera.rotF = 1.0f;
-            ////MenuCtrl = GameObject.Find("MenuCtrl").GetComponent<Button>();                                                //might need later
-            ////MenuCtrl.onClick.AddListener(clientplayer.planeobj.GetComponentInChildren<PlaneMovement>().SetJoystick);      //might need later
-            //foreach (Player player in playerList)
-            //{
-            //    player.PlayerObject = Instantiate(GenericPlayer, player.pos, player.rot);
-            //}
             PlayerUpdater.SetPlayer(clientplayer);
             PlayerUpdater.SetClientList(playerList);
             PlayerUpdater.enabled = true;
         }
         SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    static public void ResetEverything()
+    {
+        Destroy(Networking.gameObject);
+        SceneManager.LoadScene("Scenes/MainScreen");
     }
 
     void Update()
@@ -102,29 +99,6 @@ public class TCPClient : MonoBehaviour
                 return;
             }
         }
-        //if (SceneManager.GetActiveScene().name == "Game")
-        //{
-        //    Vector3 p = clientplayer.PlayerObject.transform.position;
-        //    Quaternion q = clientplayer.PlayerObject.transform.rotation;
-        //    string outString = Commands.CommandCreator(Commands.PLANE_POSITION);
-        //    outString += clientplayer.id.ToString() + Delimiters.ATTRIB_DELIM +
-        //                 p.x + Delimiters.ATTRIB_DELIM +
-        //                 p.y + Delimiters.ATTRIB_DELIM +
-        //                 p.z + Delimiters.ATTRIB_DELIM +
-        //                 q.x + Delimiters.ATTRIB_DELIM +
-        //                 q.y + Delimiters.ATTRIB_DELIM +
-        //                 q.z + Delimiters.ATTRIB_DELIM +
-        //                 q.w;
-        //    WriteSocket(outString);
-        //    foreach (Player player in playerList)
-        //    {
-        //        //player.pos is goal position
-        //        //pLoc.position is old position
-        //        Transform pLoc = player.PlayerObject.transform;
-        //        pLoc.position = Vector3.Lerp(pLoc.position, player.pos, 0.35f); //0.35f feels hacky -- consequently works okay
-        //        pLoc.rotation = Quaternion.Lerp(player.PlayerObject.transform.rotation, player.rot, 0.35f);
-        //    }
-        //}
     }
 
     private void FixedUpdate()
@@ -429,6 +403,7 @@ public class TCPClient : MonoBehaviour
 
         public static void LoadGame(string args)
         {
+
             string[] players = PlayerParse(args);
             foreach (string playerargs in players)
             {
@@ -446,6 +421,13 @@ public class TCPClient : MonoBehaviour
                                              float.Parse(argvec[5]),
                                              float.Parse(argvec[6]), 0),
                     };
+                    if(p.id == 0)
+                    {
+                        p.name = "BridgeTroll";
+                    } else
+                    {
+                        p.name = LobbyArray[p.id - 1].text;
+                    }
                     playerList.Add(p);
                 }
                 else
@@ -475,6 +457,7 @@ public class TCPClient : MonoBehaviour
     public class Player
     {
         public GameObject PlayerObject;
+        public Animator anim;
         public string name;
         public string ready;
         public int id;

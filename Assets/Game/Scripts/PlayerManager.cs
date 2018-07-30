@@ -63,6 +63,7 @@ public class PlayerManager : MonoBehaviour {
         float x = joystick.Horizontal();
         float y = joystick.Vertical();
         float distance = Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(y, 2));
+        JumpUpdate(distance);
         Vector3 movement;
         if (x != 0f && y != 0f)
         {
@@ -70,7 +71,6 @@ public class PlayerManager : MonoBehaviour {
                                                 Mathf.Atan2(x, y) * Mathf.Rad2Deg,
                                                 transform.eulerAngles.z);
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(newvec), 0.05f);
-            JumpUpdate(distance);
         }
         else
         {
@@ -87,8 +87,8 @@ public class PlayerManager : MonoBehaviour {
     {
         if (collision.gameObject.tag == "GROUND")
         {
+            anim.SetInteger("State", 1);
             jumping = false;
-            anim.SetInteger("State", 0);
         }
     }
 }

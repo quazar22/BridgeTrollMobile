@@ -131,8 +131,8 @@ ModelImporter:
     - serializedVersion: 16
       name: Skeleton|SkeletonAction
       takeName: Skeleton|SkeletonAction
-      firstFrame: 17.9
-      lastFrame: 38.9
+      firstFrame: 14.199999
+      lastFrame: 24.8
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -155,7 +155,7 @@ ModelImporter:
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+      additiveReferencePoseFrame: 52.5
     isReadable: 1
   meshes:
     lODScreenPercentages: []
