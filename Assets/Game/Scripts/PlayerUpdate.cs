@@ -39,18 +39,6 @@ public class PlayerUpdate : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update () {
-        foreach (TCPClient.Player player in playerList)
-        {
-            //player.pos is goal position
-            //pLoc.position is old position
-            Transform pLoc = player.PlayerObject.transform;
-            pLoc.position = Vector3.Lerp(pLoc.position, player.pos, 0.35f); //0.35f feels hacky -- consequently works okay
-            pLoc.rotation = Quaternion.Lerp(player.PlayerObject.transform.rotation, player.rot, 0.35f);
-        }
-    }
-
-    private void FixedUpdate()
-    {
         Vector3 p = clientplayer.PlayerObject.transform.position;
         Quaternion q = clientplayer.PlayerObject.transform.rotation;
         string outString = TCPClient.Commands.CommandCreator(Commands.PLANE_POSITION);
@@ -63,6 +51,19 @@ public class PlayerUpdate : MonoBehaviour
                      q.z + Delimiters.ATTRIB_DELIM +
                      q.w;
         TCPClient.WriteSocket(outString);
+        foreach (TCPClient.Player player in playerList)
+        {
+            //player.pos is goal position
+            //pLoc.position is old position
+            Transform pLoc = player.PlayerObject.transform;
+            pLoc.position = Vector3.Lerp(pLoc.position, player.pos, 0.35f); //0.35f feels hacky -- consequently works okay
+            pLoc.rotation = Quaternion.Lerp(player.PlayerObject.transform.rotation, player.rot, 0.35f);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        
     }
 
     public void SetPlayer(TCPClient.Player player)

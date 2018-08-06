@@ -40,6 +40,8 @@ public class TCPClient : MonoBehaviour
         clientplayer = new Player();
     }
 
+    
+
     static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         string currentscene = SceneManager.GetActiveScene().name;
@@ -140,6 +142,8 @@ public class TCPClient : MonoBehaviour
             case Commands.SET_CLIENT_INDEX:
                 clientplayer.id = Int32.Parse(args);
                 break;
+            case Commands.CLIENT_DISCONNECTED:
+                break;
         }
     }
 
@@ -173,6 +177,8 @@ public class TCPClient : MonoBehaviour
             case Commands.BEGIN_GAME:
                 Commands.LoadGame(args);
                 break;
+            case Commands.CLIENT_DISCONNECTED:
+                break;
         }
     }
 
@@ -182,6 +188,9 @@ public class TCPClient : MonoBehaviour
         {
             case Commands.PLANE_POSITION:
                 UpdatePlanePosition(args);
+                break;
+            case Commands.CLIENT_DISCONNECTED:
+                DestroyPlayer(args);
                 break;
         }
     }
@@ -199,6 +208,18 @@ public class TCPClient : MonoBehaviour
         }
     }
 
+    internal void DestroyPlayer(String args)
+    {
+        int playerId = Int32.Parse(args);
+        foreach(Player p in playerList)
+        {
+            if(p.id == playerId)
+            {
+                Destroy(p.PlayerObject.gameObject);
+                playerList.Remove(p);
+            }
+        }
+    }
 
     internal Vector3 ParsePosition(String args)
     {
@@ -244,6 +265,7 @@ public class TCPClient : MonoBehaviour
 
     void OnApplicationQuit()
     {
+        WriteSocket(Commands.CommandCreator(Commands.CLIENT_DISCONNECTED) + "1");
         CloseSocket();
     }
 
@@ -251,7 +273,10 @@ public class TCPClient : MonoBehaviour
     {
         try
         {
-            tcpClient = new TcpClient(host.text, Int32.Parse(port.text));
+            tcpClient = new TcpClient(host.text, Int32.Parse(port.text))
+            {
+                NoDelay = true
+            };
             ns = tcpClient.GetStream();
             socket_reader = new StreamReader(ns, true);
             socket_writer = new StreamWriter(ns);
@@ -268,7 +293,10 @@ public class TCPClient : MonoBehaviour
     {
         try
         {
-            tcpClient = new TcpClient(host, Int32.Parse(port));
+            tcpClient = new TcpClient(host, Int32.Parse(port))
+            {
+                NoDelay = true
+            };
             ns = tcpClient.GetStream();
             socket_reader = new StreamReader(ns, true);
             socket_writer = new StreamWriter(ns);

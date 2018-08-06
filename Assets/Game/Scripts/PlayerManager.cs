@@ -60,7 +60,7 @@ public class PlayerManager : MonoBehaviour {
         }
         ////////////////////////// TEST CODE //////////////////////////
         ////////////////////////// TEST CODE //////////////////////////
-        float x = joystick.Horizontal();
+        float x = -joystick.Horizontal();
         float y = joystick.Vertical();
         float distance = Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(y, 2));
         JumpUpdate(distance);

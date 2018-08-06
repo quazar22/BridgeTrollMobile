@@ -25,7 +25,7 @@ public class BridgeBuilder : MonoBehaviour
                 bridgeList.Add(Instantiate(bridge, StartPosition, bridge.transform.rotation));
 
             }
-            StartPosition = new Vector3(StartPosition.x, StartPosition.y, 0 + (i * 50));
+            StartPosition = new Vector3(StartPosition.x, StartPosition.y, 50 + (i * 50));
         }
     }
 	

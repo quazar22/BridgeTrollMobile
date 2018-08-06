@@ -30,8 +30,8 @@ public class TCPServer : MonoBehaviour
         try
         {
             server = new TcpListener(IPAddress.Any, Int32.Parse(port.text));
+            server.Server.NoDelay = true;
             server.Start();
-
             StartListening();
             serverStarted = true;
         }
